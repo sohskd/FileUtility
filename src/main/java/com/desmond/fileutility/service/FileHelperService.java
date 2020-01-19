@@ -8,4 +8,8 @@ import java.util.List;
 public interface FileHelperService {
 
     List<File> getAvailableFoldersToProcess(FileInProcess fileInProcess);
+
+    void processOnFileOrFolder(List<File> listOfFiles);
+
+    void decomOnFileOrFolder(List<File> listOfFiles);
 }

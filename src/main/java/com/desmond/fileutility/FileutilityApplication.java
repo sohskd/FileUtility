@@ -1,21 +1,18 @@
 package com.desmond.fileutility;
 
-import com.desmond.fileutility.constants.ValueConstants;
-import com.desmond.fileutility.service.FileProcessor;
+import com.desmond.fileutility.service.FileCompressorProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Arrays;
-
 @SpringBootApplication
 public class FileutilityApplication {
 
-	FileProcessor fileProcessor;
+	FileCompressorProcessor fileCompressorProcessor;
 
 	@Autowired
-	public FileutilityApplication(FileProcessor fileProcessor) {
-		this.fileProcessor = fileProcessor;
+	public FileutilityApplication(FileCompressorProcessor fileCompressorProcessor) {
+		this.fileCompressorProcessor = fileCompressorProcessor;
 	}
 
 	public static void main(String[] args) {
