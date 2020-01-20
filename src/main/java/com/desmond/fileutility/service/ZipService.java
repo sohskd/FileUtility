@@ -8,11 +8,15 @@ public interface ZipService {
 
     void zipFile(File file);
 
-    void zipFolder(List<String> listOfFiles, File file);
+    void zipFolder(List<String> listOfFiles, File file, ZipOutputStream zos);
 
     void zipFileInFolder(File file, ZipOutputStream zos);
 
-    String getFullFileName(String fileName, String extension);
+//    String getFullFileName(String fileName, String extension);
 
-    void unzipFileOfFolder(File file);
+    File unzipFileOrFolder(File file);
+
+    void decompress(File file);
+
+    void deleteTempFile(File file);
 }

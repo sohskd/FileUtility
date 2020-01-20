@@ -9,4 +9,6 @@ public class ValueConstants {
 
     public static final boolean IS_FOLDER = true;
     public static final boolean IS_FILE = true;
+
+    public static final String UNDERSCORE = "_";
 }

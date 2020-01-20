@@ -13,8 +13,7 @@ import java.util.List;
 @Service
 public class DirectoryProcessorServiceImpl implements DirectoryProcessor {
 
-    private ArrayList<String> arrayListOfFiles = new ArrayList<>();
-
+    private ArrayList<String> arrayListOfFiles;
     private FileValidator fileValidator;
 
     @Autowired
@@ -25,15 +24,16 @@ public class DirectoryProcessorServiceImpl implements DirectoryProcessor {
     @Override
     public List<String> getAllFilesInDirectory(File dir) {
         try {
-            this.populateFilesList(dir);
-            return this.arrayListOfFiles;
+            List<String> results = new ArrayList<>();
+            results = this.populateFilesList(dir, results);
+            return results;
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    private void populateFilesList(File dir) throws IOException {
+    private List<String> populateFilesList(File dir, List<String> results) throws IOException {
         File[] files = dir.listFiles();
         for (File file : files) {
 
@@ -41,10 +41,11 @@ public class DirectoryProcessorServiceImpl implements DirectoryProcessor {
                 continue;
 
             if (file.isFile()) {
-                this.arrayListOfFiles.add(file.getAbsolutePath());
+                results.add(file.getAbsolutePath());
             } else {
-                populateFilesList(file);
+                populateFilesList(file, results);
             }
         }
+        return results;
     }
 }
