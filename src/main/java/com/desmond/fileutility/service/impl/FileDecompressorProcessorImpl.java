@@ -32,7 +32,8 @@ public class FileDecompressorProcessorImpl implements FileDecompressorProcessor 
         this.fileInProcess.setFileInput(args[0]);
         this.fileInProcess.setFileOutput(args[1]);
         List<File> listOfFiles = this.fileHelperService.getAvailableFoldersToProcess(this.fileInProcess);
-        this.fileHelperService.decomOnFileOrFolder(listOfFiles);
+        int index = 0;
+        this.fileHelperService.decomOnFileOrFolder(listOfFiles, index);
         return true;
     }
 }

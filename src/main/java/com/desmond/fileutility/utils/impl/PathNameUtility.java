@@ -64,4 +64,11 @@ public class PathNameUtility {
         stringBuilder.append(FilenameUtils.getExtension(String.valueOf(file)));
         return stringBuilder.toString();
     }
+
+    public String getCombineFileName(String fileName, int index) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(fileName);
+        stringBuilder.append(index);
+        return stringBuilder.toString();
+    }
 }

@@ -10,9 +10,11 @@ public interface ZipService {
 
     void zipFolder(List<String> listOfFiles, File file, ZipOutputStream zos);
 
-    void zipFileInFolder(File file, ZipOutputStream zos);
+//    void zipFileInFolder(File file, ZipOutputStream zos);
+    File zipFileInFolder(File file);
 
-    File unzipFileOrFolder(File file);
+//    File unzipFileOrFolder(File file);
+    File unzipFileOrFolder(File file, int index);
 
     void decompress(File file);
 

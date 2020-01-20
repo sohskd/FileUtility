@@ -1,6 +1,9 @@
 package com.desmond.fileutility.utils.impl;
 
+import com.desmond.fileutility.constants.FileConstants;
+import com.desmond.fileutility.constants.ValueConstants;
 import com.desmond.fileutility.utils.FileUtilityInterface;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -36,5 +39,10 @@ public class FileUtility implements FileUtilityInterface {
             throw new FileNotFoundException(inputDirectory + " not found");
         }
         return true;
+    }
+
+    public boolean isZipFile(File file) {
+        boolean result = FilenameUtils.getExtension(String.valueOf(file)).equals(FileConstants.ZIP.substring(1));
+        return result;
     }
 }

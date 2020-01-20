@@ -5,6 +5,7 @@ import com.desmond.fileutility.model.FileInProcess;
 import com.desmond.fileutility.service.DirectoryProcessor;
 import com.desmond.fileutility.service.FileHelperService;
 import com.desmond.fileutility.service.ZipService;
+import com.desmond.fileutility.utils.impl.FileUtility;
 import com.desmond.fileutility.utils.impl.FileValidator;
 import com.desmond.fileutility.utils.impl.PathNameUtility;
 import org.slf4j.Logger;
@@ -28,13 +29,15 @@ public class FileHelperServiceImpl implements FileHelperService {
     private DirectoryProcessor directoryProcessor;
     private FileValidator fileValidator;
     private PathNameUtility pathNameUtility;
+    private FileUtility fileUtility;
 
     @Autowired
-    public FileHelperServiceImpl(ZipService zipService, DirectoryProcessor directoryProcessor, FileValidator fileValidator, PathNameUtility pathNameUtility) {
+    public FileHelperServiceImpl(ZipService zipService, DirectoryProcessor directoryProcessor, FileValidator fileValidator, PathNameUtility pathNameUtility, FileUtility fileUtility) {
         this.zipService = zipService;
         this.directoryProcessor = directoryProcessor;
         this.fileValidator = fileValidator;
         this.pathNameUtility = pathNameUtility;
+        this.fileUtility = fileUtility;
     }
 
     @Override
@@ -71,14 +74,31 @@ public class FileHelperServiceImpl implements FileHelperService {
     }
 
     @Override
-    public void decomOnFileOrFolder(List<File> listOfFiles) {
+    public void decomOnFileOrFolder(List<File> listOfFiles, int index) {
+
         for (File file : listOfFiles) {
             if (this.fileValidator.isHiddenFile(file))
                 continue;
-            if (file.isFile()) {
-                File fileTemp = this.zipService.unzipFileOrFolder(file);
-                this.zipService.decompress(fileTemp);
-                this.zipService.deleteTempFile(fileTemp);
+//            if (file.isFile()) {
+            if (fileUtility.isZipFile(file)) {
+                File fileTemp = this.zipService.unzipFileOrFolder(file, index);
+
+                // if files in fileTemp are zip, then recursive
+                boolean thereIsZipFiles = Arrays.stream(fileTemp.listFiles()).anyMatch(currentFile ->
+                    fileUtility.isZipFile(currentFile)
+                );
+
+                if (thereIsZipFiles) {
+                    decomOnFileOrFolder(Arrays.asList(fileTemp.listFiles()), index + 1);
+                } else {
+                    this.zipService.decompress(fileTemp);
+                    this.zipService.deleteTempFile(fileTemp);
+                }
+
+                // else work on it
+
+//                this.zipService.decompress(fileTemp);
+//                this.zipService.deleteTempFile(fileTemp);
             } else if (file.isDirectory()) {
                 List<String> listOfFilesInDirectory = this.directoryProcessor.getAllFilesInDirectory(file);
                 String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
