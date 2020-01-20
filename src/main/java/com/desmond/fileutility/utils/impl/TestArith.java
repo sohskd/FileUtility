@@ -1,4 +1,4 @@
-package com.desmond.fileutility.utils;
+package com.desmond.fileutility.utils.impl;
 
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.desmond.fileutility.service.impl;
 
 import com.desmond.fileutility.service.DirectoryProcessor;
-import com.desmond.fileutility.utils.FileValidator;
+import com.desmond.fileutility.utils.impl.FileValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

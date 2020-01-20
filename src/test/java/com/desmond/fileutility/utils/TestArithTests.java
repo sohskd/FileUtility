@@ -1,5 +1,6 @@
 package com.desmond.fileutility.utils;
 
+import com.desmond.fileutility.utils.impl.TestArith;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
