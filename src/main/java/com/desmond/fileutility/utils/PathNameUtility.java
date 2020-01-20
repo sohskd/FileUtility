@@ -1,6 +1,5 @@
 package com.desmond.fileutility.utils;
 
-import ch.qos.logback.core.util.FileUtil;
 import com.desmond.fileutility.constants.FileConstants;
 import com.desmond.fileutility.constants.ValueConstants;
 import com.desmond.fileutility.model.FileInProcess;
@@ -37,15 +36,6 @@ public class PathNameUtility {
         stringBuilder.append(index);
         stringBuilder.append(".");
         stringBuilder.append(FilenameUtils.getExtension(String.valueOf(file)));
-        return stringBuilder.toString();
-    }
-
-    public String getZipFolderOutputName(File file, String extension) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(this.fileInProcess.getFileOutput());
-        stringBuilder.append("/");
-        stringBuilder.append(file.getName());
-        stringBuilder.append(extension);
         return stringBuilder.toString();
     }
 

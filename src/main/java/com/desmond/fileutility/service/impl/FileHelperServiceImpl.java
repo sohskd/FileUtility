@@ -42,9 +42,7 @@ public class FileHelperServiceImpl implements FileHelperService {
     public List<File> getAvailableFoldersToProcess(FileInProcess fileInProcess) {
         LOGGER.info("> FileHelperServiceImpl getAvailableFoldersToProcess(FileInProcess fileInProcess)");
         File[] allFolderPath = this.getAllFolderPath(fileInProcess);
-
         List<File> listOfFiles = Arrays.asList(allFolderPath);
-
         return listOfFiles;
     }
 
@@ -61,17 +59,11 @@ public class FileHelperServiceImpl implements FileHelperService {
                 this.zipService.zipFile(file);
             } else if (file.isDirectory()) {
                 List<String> listOfFilesInDirectory = this.directoryProcessor.getAllFilesInDirectory(file);
-
                 String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
-
                 try {
-
                     FileOutputStream fos = new FileOutputStream(fullZipFullName);
-
                     ZipOutputStream zos = new ZipOutputStream(fos);
-
                     this.zipService.zipFolder(listOfFilesInDirectory, file, zos);
-
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -81,51 +73,31 @@ public class FileHelperServiceImpl implements FileHelperService {
 
     @Override
     public void decomOnFileOrFolder(List<File> listOfFiles) {
-
         for (File file : listOfFiles) {
-
             if (this.fileValidator.isHiddenFile(file))
                 continue;
-
             if (file.isFile()) {
-
-                // Unzip file
                 File fileTemp = this.zipService.unzipFileOrFolder(file);
-
                 this.zipService.decompress(fileTemp);
-
-                // Delete Temp folder
-
                 this.zipService.deleteTempFile(fileTemp);
-
-                // Combine file
             } else if (file.isDirectory()) {
                 List<String> listOfFilesInDirectory = this.directoryProcessor.getAllFilesInDirectory(file);
-
                 String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
-
                 try {
-
                     FileOutputStream fos = new FileOutputStream(fullZipFullName);
-
                     ZipOutputStream zos = new ZipOutputStream(fos);
-
                     this.zipService.zipFolder(listOfFilesInDirectory, file, zos);
-
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
             }
         }
     }
 
     protected File[] getAllFolderPath(FileInProcess fileInProcess) {
-
         String folderToSearch = fileInProcess.getFileInput();
         File root = new File(folderToSearch);
         File[] allFolderPath = root.listFiles();
-
         return allFolderPath;
     }
 }

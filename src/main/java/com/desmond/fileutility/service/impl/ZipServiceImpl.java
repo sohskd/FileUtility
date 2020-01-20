@@ -29,16 +29,14 @@ public class ZipServiceImpl implements ZipService {
     private FileInProcess fileInProcess;
     private DirectoryProcessor directoryProcessor;
     private FileValidator fileValidator;
-    private FileAssembleImpl fileAssemble;
     private FileUtility fileUtility;
     private PathNameUtility pathNameUtility;
 
     @Autowired
-    public ZipServiceImpl(FileInProcess fileInProcess, DirectoryProcessor directoryProcessor, FileValidator fileValidator, FileAssembleImpl fileAssemble, FileUtility fileUtility, PathNameUtility pathNameUtility) {
+    public ZipServiceImpl(FileInProcess fileInProcess, DirectoryProcessor directoryProcessor, FileValidator fileValidator, FileUtility fileUtility, PathNameUtility pathNameUtility) {
         this.fileInProcess = fileInProcess;
         this.directoryProcessor = directoryProcessor;
         this.fileValidator = fileValidator;
-        this.fileAssemble = fileAssemble;
         this.fileUtility = fileUtility;
         this.pathNameUtility = pathNameUtility;
     }
@@ -46,15 +44,11 @@ public class ZipServiceImpl implements ZipService {
     @Override
     public void zipFile(File file) {
         try {
-
             byte[] totalBytesOfFile = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
             long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
-
             String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
-
             FileOutputStream fos = new FileOutputStream(fullZipFullName);
             ZipOutputStream zos = new ZipOutputStream(fos);
-
             int index = 0;
             int off = 0;
             while (off < totalBytesOfFile.length) {
@@ -67,9 +61,7 @@ public class ZipServiceImpl implements ZipService {
                 index++;
                 off += maxBytesPerFile;
             }
-
             zos.close();
-
         } catch (FileNotFoundException ex) {
             System.err.format("The file does not exist");
         } catch (IOException ex) {
@@ -104,34 +96,19 @@ public class ZipServiceImpl implements ZipService {
 
     @Override
     public void zipFolder(List<String> listOfFiles, File file, ZipOutputStream zos) {
-
-        boolean isFolder = true;
-
         try {
-
             for (File f : file.listFiles()) {
-
                 if (f.isFile()) {
-                    // zip it
                     zipFileInFolder(f, zos);
                 } else if (f.isDirectory()) {
                     List<String> listOfFilesInDirectory = this.directoryProcessor.getAllFilesInDirectory(f);
-
-                    // Create new zos
-
                     String fullZipFullName = this.pathNameUtility.getFullFileName(f.getName(), FileConstants.ZIP);
-
                     FileOutputStream fos = new FileOutputStream(fullZipFullName);
-
                     ZipOutputStream zosInner = new ZipOutputStream(fos);
-
                     zipFolder(listOfFilesInDirectory, f, zosInner);
-
                 }
             }
-
             zos.close();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -141,7 +118,6 @@ public class ZipServiceImpl implements ZipService {
 
     @Override
     public File unzipFileOrFolder(File file) {
-
         String fileZip = this.pathNameUtility.getFileOrFolderNameForDecom(file);
         File createDirectory = this.fileUtility.createOrRetrieve(this.pathNameUtility.getPathOfTempForDecom());
         File destDir = createDirectory;
@@ -159,28 +135,23 @@ public class ZipServiceImpl implements ZipService {
                 fos.close();
                 zipEntry = zis.getNextEntry();
             }
-
             zis.closeEntry();
             zis.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return createDirectory;
     }
 
     @Override
     public void decompress(File fileToWorkOn) {
-
         File[] listOfFiles = fileToWorkOn.listFiles();
-
-
         File ofile = new File(this.pathNameUtility.getNameOfDecomFile(listOfFiles[0]));
         FileOutputStream fos;
         FileInputStream fis;
 
         byte[] fileBytes;
-        int bytesRead = 0;
+        int bytesRead;
 
         try {
             fos = new FileOutputStream(ofile, true);
@@ -208,14 +179,11 @@ public class ZipServiceImpl implements ZipService {
 
     public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
         File destFile = new File(destinationDir, zipEntry.getName());
-
         String destDirPath = destinationDir.getCanonicalPath();
         String destFilePath = destFile.getCanonicalPath();
-
         if (!destFilePath.startsWith(destDirPath + File.separator)) {
             throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
         }
-
         return destFile;
     }
 }

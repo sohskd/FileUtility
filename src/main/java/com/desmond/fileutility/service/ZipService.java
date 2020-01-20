@@ -12,8 +12,6 @@ public interface ZipService {
 
     void zipFileInFolder(File file, ZipOutputStream zos);
 
-//    String getFullFileName(String fileName, String extension);
-
     File unzipFileOrFolder(File file);
 
     void decompress(File file);

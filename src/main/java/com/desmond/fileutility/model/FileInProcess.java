@@ -2,15 +2,12 @@ package com.desmond.fileutility.model;
 
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 public class FileInProcess {
 
     private String fileInput;
     private String fileOutput;
     private int maximumCompressionSizePerFileInMB;
-    private List<String> listOfFiles;
 
     public FileInProcess () {}
 
@@ -36,13 +33,5 @@ public class FileInProcess {
 
     public void setMaximumCompressionSizePerFileInMB(int maximumCompressionSizePerFileInMB) {
         this.maximumCompressionSizePerFileInMB = maximumCompressionSizePerFileInMB;
-    }
-
-    public List<String> getListOfFiles() {
-        return listOfFiles;
-    }
-
-    public void setListOfFiles(List<String> listOfFiles) {
-        this.listOfFiles = listOfFiles;
     }
 }
