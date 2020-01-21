@@ -32,7 +32,7 @@
 
 ### File Decompression
 
-> The file compression feature supports decompressing zip files
+> The file compression feature supports decompressing zip files only
 
 ### Steps
 - Step 1 
@@ -40,7 +40,8 @@
     - You may unzip the zip file to view the contents where the files will be of the maximum size specified during the file compression step 
  
 - Step 2
-    - Remove the unzipped folder in the Test Output Directory before running the decompression command. There should only be zip files in the Test Output Directory
+    - Remove the unzipped folder in the Test Output Directory before running the decompression command. 
+    - **<u>There should only be zip files in the Test Output Directory</u>**
     - Run the following command with 2 inputs (Test Output Directory Path, Test Decompressed Directory)
     (eg `mvn spring-boot:run -Dspring-boot.run.arguments="C:\Des\Projects\FileUtil\TestOutputs,C:\Des\Projects\FileUtil\TestDecom"`)
  
