@@ -10,7 +10,7 @@
 
 > The file compression feature supports compressing files & folders into the specified size in MB.
 
-### Steps
+#### Steps
 - Step 1 
     - Clone this repo to your local machine using `https://github.com/sohskd/FileUtility.git`
     
@@ -34,7 +34,7 @@
 
 > The file compression feature supports decompressing zip files only
 
-### Steps
+#### Steps
 - Step 1 
     - There should be zip files in the Test Output Directory after the file compression
     - You may unzip the zip file to view the contents where the files will be of the maximum size specified during the file compression step 
@@ -47,3 +47,8 @@
  
  - Step 3
     - The resulting decompressed file will be in the Test Decompressed Directory
+
+### Important Notes
+
+- There should only be zip files in the Test Output Directory before running decompression step
+- The Test Decompressed Directory (where the files will be decompressed to) should be empty before running decompression step
