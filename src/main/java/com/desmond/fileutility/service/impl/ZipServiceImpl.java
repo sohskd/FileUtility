@@ -177,7 +177,17 @@ public class ZipServiceImpl implements ZipService {
 
     @Override
     public File unzipFileOrFolder(File file, int index) {
-        String fileZip = this.pathNameUtility.getFileOrFolderNameForDecom(file);
+        String fileZip = file.getAbsolutePath();
+
+        // If file not in TestOutputs, fileZip is in temp
+//        try {
+//            if (fileUtility.checkIfFileDirectoryExist(file.getAbsolutePath())) {
+//                fileZip = this.pathNameUtility.getFileOrFolderNameForDecom(file);
+//            }
+//        } catch (FileNotFoundException e) {
+//            fileZip = file.getAbsolutePath();
+//        }
+
         File createDirectory = this.fileUtility.createOrRetrieve(this.pathNameUtility.getCombineFileName(this.pathNameUtility.getPathOfTempForDecom(), index));
         File destDir = createDirectory;
         byte[] buffer = new byte[1024];

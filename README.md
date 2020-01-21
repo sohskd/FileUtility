@@ -20,9 +20,9 @@
     - Create a Test Decompressed Directory where this directory will contain the files after decompression (eg `C:\Des\Projects\FileUtil\TestDecom`)
     
 - Step 3
-    - Put in some test files in the Test Input Directory.
-    - You can make some dummy files (eg On windows machine, you can make a 40MB file with `fsutil file createnew testdummy2.txt 40000000`)
-
+    - Put in some test files in the Test Input Directory
+    - Add some dummy or real files (eg On windows machine, you can make a 40MB file with `fsutil file createnew testdummy2.txt 40000000`)
+    - You may create folders with files in it
 - Step 4
     - Run the following command with 3 inputs (Test Input Directory Path, Test Output Directory Path and maximum size of files in MB) \
     (eg `mvn spring-boot:run -Dspring-boot.run.arguments="C:\Des\Projects\FileUtil\TestInputs,C:\Des\Projects\FileUtil\TestOutputs,10"`)
@@ -36,8 +36,8 @@
 
 ### Steps
 - Step 1 
-    - There should be a zip file in the Test Output Directory after the file compression
-    - You may unzip the zip file to view the contents
+    - There should be zip files in the Test Output Directory after the file compression
+    - You may unzip the zip file to view the contents where the files will be of the maximum size specified during the file compression step 
  
 - Step 2
     - Remove the unzipped folder in the Test Output Directory before running the decompression command. There should only be zip files in the Test Output Directory

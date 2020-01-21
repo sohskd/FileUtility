@@ -76,7 +76,9 @@ public class FileHelperServiceImpl implements FileHelperService {
     @Override
     public void decomOnFileOrFolder(List<File> listOfFiles, int index) {
 
-        for (File file : listOfFiles) {
+        for (int j = 0; j < listOfFiles.size(); j++) {
+//        for (File file : listOfFiles) {
+            File file = listOfFiles.get(j);
             if (this.fileValidator.isHiddenFile(file))
                 continue;
 //            if (file.isFile()) {
@@ -85,7 +87,7 @@ public class FileHelperServiceImpl implements FileHelperService {
 
                 // if files in fileTemp are zip, then recursive
                 boolean thereIsZipFiles = Arrays.stream(fileTemp.listFiles()).anyMatch(currentFile ->
-                    fileUtility.isZipFile(currentFile)
+                        fileUtility.isZipFile(currentFile)
                 );
 
                 if (thereIsZipFiles) {
@@ -95,21 +97,25 @@ public class FileHelperServiceImpl implements FileHelperService {
                     this.zipService.deleteTempFile(fileTemp);
                 }
 
-                // else work on it
+                fileUtility.deleteDir(fileTemp);
+            }
+
+            // else work on it
 
 //                this.zipService.decompress(fileTemp);
 //                this.zipService.deleteTempFile(fileTemp);
-            } else if (file.isDirectory()) {
-                List<String> listOfFilesInDirectory = this.directoryProcessor.getAllFilesInDirectory(file);
-                String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
-                try {
-                    FileOutputStream fos = new FileOutputStream(fullZipFullName);
-                    ZipOutputStream zos = new ZipOutputStream(fos);
-                    this.zipService.zipFolder(listOfFilesInDirectory, file, zos);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
+//            } else if (file.isDirectory()) {
+//                List<String> listOfFilesInDirectory = this.directoryProcessor.getAllFilesInDirectory(file);
+//                String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
+//                try {
+//                    FileOutputStream fos = new FileOutputStream(fullZipFullName);
+//                    ZipOutputStream zos = new ZipOutputStream(fos);
+//                    this.zipService.zipFolder(listOfFilesInDirectory, file, zos);
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
         }
     }
 
