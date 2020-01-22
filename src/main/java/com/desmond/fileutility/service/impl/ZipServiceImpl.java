@@ -45,7 +45,6 @@ public class ZipServiceImpl implements ZipService {
     public void zipFile(File file) {
         boolean exceedMax = this.fileUtility.checkIfFileSizeExceedMaximumValue(file);
         if (exceedMax) {
-            LOGGER.info("Exceeded");
             try {
                 List<byte[]> listOfBytes = this.fileUtility.getListOfBytes(file);
                 String fullZipFileName = getFullZipFileName(file);
