@@ -21,4 +21,15 @@ public class FileValidator {
 
         return ans;
     }
+
+    public int getLengthOfByteBigFile(int totalByteLengthOfFile, int off, int len) {
+        int ans;
+
+        if (totalByteLengthOfFile - off < len)
+            ans = totalByteLengthOfFile - off;
+        else
+            ans = len;
+
+        return ans;
+    }
 }

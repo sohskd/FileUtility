@@ -7,5 +7,7 @@ public class ValueConstants {
 
     public static final long  MEGABYTE = 1024L * 1024L;
 
+    public static final long KILOBYTE = 1024L;
+
     public static final String UNDERSCORE = "_";
 }

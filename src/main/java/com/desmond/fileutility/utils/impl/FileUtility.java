@@ -6,15 +6,18 @@ import com.desmond.fileutility.utils.FileUtilityInterface;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.math.BigInteger;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class FileUtility implements FileUtilityInterface {
 
     public FileUtility() {};
 
+    @Override
     public File createOrRetrieve(String directory) {
         File dir = new File(directory);
         if (!dir.exists())
@@ -22,6 +25,7 @@ public class FileUtility implements FileUtilityInterface {
         return new File(directory);
     }
 
+    @Override
     public void deleteDir(File file) {
         File[] contents = file.listFiles();
         if (contents != null) {
@@ -34,6 +38,7 @@ public class FileUtility implements FileUtilityInterface {
         file.delete();
     }
 
+    @Override
     public boolean checkIfFileDirectoryExist(String inputDirectory) throws FileNotFoundException {
         if (!new File(inputDirectory).exists()) {
             throw new FileNotFoundException(inputDirectory + " not found");
@@ -41,8 +46,45 @@ public class FileUtility implements FileUtilityInterface {
         return true;
     }
 
+    @Override
+    public List<byte[]> getListOfBytes(File file) {
+        try {
+            FileInputStream fis = new FileInputStream(file.getAbsoluteFile());
+            List<byte[]> listOfBytes = new ArrayList<>();
+            float index = 0;
+            int len = Integer.MAX_VALUE - 5;
+            int totalNumberOfBytesRead;
+            double fileLen = file.length();
+            while(index < fileLen) {
+                byte[] byteData = new byte[Integer.MAX_VALUE - 5];
+                len = getLenOfByteLeft();
+                totalNumberOfBytesRead = fis.read(byteData, 0, len);
+                listOfBytes.add(byteData);
+                index += totalNumberOfBytesRead;
+            }
+            fis.close();
+            return listOfBytes;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private int getLenOfByteLeft() {
+            return Integer.MAX_VALUE - 5;
+    }
+
     public boolean isZipFile(File file) {
         boolean result = FilenameUtils.getExtension(String.valueOf(file)).equals(FileConstants.ZIP.substring(1));
         return result;
+    }
+
+    public boolean checkIfFileSizeExceedMaximumValue(File file) {
+        if (file.length() > Integer.MAX_VALUE) {
+            return true;
+        }
+        return false;
     }
 }

@@ -43,70 +43,103 @@ public class ZipServiceImpl implements ZipService {
 
     @Override
     public void zipFile(File file) {
-        try {
-            byte[] totalBytesOfFile = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
-            long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
-            String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
-            FileOutputStream fos = new FileOutputStream(fullZipFullName);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-            int index = 0;
-            int off = 0;
-            while (off < totalBytesOfFile.length) {
-                String zipFileName = this.pathNameUtility.getZipEntryName(file, String.valueOf(index));
-                zos.putNextEntry(new ZipEntry(zipFileName));
-                int len = (int) maxBytesPerFile;
-                len = this.fileValidator.getLengthOfByte(totalBytesOfFile.length, off, len);
-                zos.write(totalBytesOfFile, off, len);
-                zos.closeEntry();
-                index++;
-                off += maxBytesPerFile;
+        boolean exceedMax = this.fileUtility.checkIfFileSizeExceedMaximumValue(file);
+        if (exceedMax) {
+            LOGGER.info("Exceeded");
+            try {
+                List<byte[]> listOfBytes = this.fileUtility.getListOfBytes(file);
+                String fullZipFileName = getFullZipFileName(file);
+                ZipOutputStream zos = getZipOutputStream(fullZipFileName);
+                for (int index = 0; index < listOfBytes.size(); index++) {
+                    byte[] byteArray = listOfBytes.get(index);
+                    writeItToTheZipForBigFiles(byteArray, file, zos, index);
+                }
+                zos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            zos.close();
-        } catch (FileNotFoundException ex) {
-            System.err.format("The file does not exist");
-        } catch (IOException ex) {
-            System.err.println("I/O error: " + ex);
+        } else {
+            try {
+                byte[] totalBytesOfFile = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
+                String fullZipFileName = getFullZipFileName(file);
+                ZipOutputStream zos = getZipOutputStream(fullZipFileName);
+                writeItToTheZip(totalBytesOfFile, file, zos);
+                zos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-//    @Override
-//    public void zipFileInFolder(File file, ZipOutputStream zos) {
+//    private File zipItWrapper(File file) {
 //        try {
 //            byte[] totalBytesOfFile = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
-//            long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
-//
-//            int index = 0;
-//            int off = 0;
-//            while (off < totalBytesOfFile.length) {
-//                String zipFileName = this.pathNameUtility.getZipEntryName(file, String.valueOf(index));
-//                zos.putNextEntry(new ZipEntry(zipFileName));
-//                int len = (int) maxBytesPerFile;
-//                len = this.fileValidator.getLengthOfByte(totalBytesOfFile.length, off, len);
-//                zos.write(totalBytesOfFile, off, len);
-//                zos.closeEntry();
-//                index++;
-//                off += maxBytesPerFile;
-//            }
-//        } catch (FileNotFoundException ex) {
-//            System.err.format("The file does not exist");
-//        } catch (IOException ex) {
-//            System.err.println("I/O error: " + ex);
+//            return zipIt(totalBytesOfFile);
+//        } catch (IOException e) {
+//            e.printStackTrace();
 //        }
+//        return null;
 //    }
 
     @Override
     public File zipFileInFolder(File file) {
         try {
             byte[] totalBytesOfFile = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
-            long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
+            String fullZipFileName = getFullZipFileName(file);
+            ZipOutputStream zos = getZipOutputStream(fullZipFileName);
+            writeItToTheZip(totalBytesOfFile, file, zos);
+            zos.close();
+            return new File(fullZipFileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-            int index = 0;
-            int off = 0;
+    private String getFullZipFileName(File file) {
+        String fullZipFileName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
+        return fullZipFileName;
+    }
 
-            String fullZipFullName = this.pathNameUtility.getFullFileName(file.getName(), FileConstants.ZIP);
+    private ZipOutputStream getZipOutputStream(String fullZipFullName) {
+        try {
             FileOutputStream fos = new FileOutputStream(fullZipFullName);
             ZipOutputStream zos = new ZipOutputStream(fos);
+            return zos;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    private void writeItToTheZipForBigFiles(byte[] totalBytesOfFile, File file, ZipOutputStream zos, int index) {
+        try {
+            long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
+            float off = 0;
+            int inside = 0;
+            while (off < totalBytesOfFile.length) {
+                String zipFileName = this.pathNameUtility.getZipEntryName(file, String.valueOf(index) + "-" + String.valueOf(inside));
+                zos.putNextEntry(new ZipEntry(zipFileName));
+                int len = (int) maxBytesPerFile;
+                len = this.fileValidator.getLengthOfByteBigFile(totalBytesOfFile.length, (int) off, len);
+                zos.write(totalBytesOfFile, (int) off, len);
+                zos.closeEntry();
+                inside += 1;
+                off += maxBytesPerFile;
+                System.out.println(index);
+            }
+        } catch (FileNotFoundException ex) {
+            System.err.format("The file does not exist");
+        } catch (IOException ex) {
+            System.err.println("I/O error: " + ex);
+        }
+    }
+
+    private void writeItToTheZip(byte[] totalBytesOfFile, File file, ZipOutputStream zos) {
+        try {
+            long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
+            int index = 0;
+            int off = 0;
             while (off < totalBytesOfFile.length) {
                 String zipFileName = this.pathNameUtility.getZipEntryName(file, String.valueOf(index));
                 zos.putNextEntry(new ZipEntry(zipFileName));
@@ -117,30 +150,20 @@ public class ZipServiceImpl implements ZipService {
                 index++;
                 off += maxBytesPerFile;
             }
-            zos.close();
-            return new File(fullZipFullName);
-
         } catch (FileNotFoundException ex) {
             System.err.format("The file does not exist");
-
         } catch (IOException ex) {
             System.err.println("I/O error: " + ex);
         }
-
-        return null;
     }
 
     @Override
     public void zipFolder(List<String> listOfFiles, File file, ZipOutputStream zos) {
         try {
-
             int index = 0;
-
             for (File f : file.listFiles()) {
-
                 if (this.fileValidator.isHiddenFile(f))
                     continue;
-
                 if (f.isFile()) {
                     File returnedZipFile = zipFileInFolder(f);
                     File fileToBeRemoved = writeIntoZip(returnedZipFile, index, zos);
@@ -178,15 +201,6 @@ public class ZipServiceImpl implements ZipService {
     @Override
     public File unzipFileOrFolder(File file, int index) {
         String fileZip = file.getAbsolutePath();
-
-        // If file not in TestOutputs, fileZip is in temp
-//        try {
-//            if (fileUtility.checkIfFileDirectoryExist(file.getAbsolutePath())) {
-//                fileZip = this.pathNameUtility.getFileOrFolderNameForDecom(file);
-//            }
-//        } catch (FileNotFoundException e) {
-//            fileZip = file.getAbsolutePath();
-//        }
 
         File createDirectory = this.fileUtility.createOrRetrieve(this.pathNameUtility.getCombineFileName(this.pathNameUtility.getPathOfTempForDecom(), index));
         File destDir = createDirectory;
