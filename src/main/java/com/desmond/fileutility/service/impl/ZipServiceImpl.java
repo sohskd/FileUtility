@@ -116,6 +116,7 @@ public class ZipServiceImpl implements ZipService {
             long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
             float off = 0;
             int inside = 0;
+            LOGGER.info("Processing file chunk: " + index);
             while (off < totalBytesOfFile.length) {
                 String zipFileName = this.pathNameUtility.getZipEntryName(file, String.valueOf(index) + "-" + String.valueOf(inside));
                 zos.putNextEntry(new ZipEntry(zipFileName));
@@ -125,7 +126,6 @@ public class ZipServiceImpl implements ZipService {
                 zos.closeEntry();
                 inside += 1;
                 off += maxBytesPerFile;
-                System.out.println(index);
             }
         } catch (FileNotFoundException ex) {
             System.err.format("The file does not exist");
@@ -203,7 +203,7 @@ public class ZipServiceImpl implements ZipService {
 
         File createDirectory = this.fileUtility.createOrRetrieve(this.pathNameUtility.getCombineFileName(this.pathNameUtility.getPathOfTempForDecom(), index));
         File destDir = createDirectory;
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[(int) ValueConstants.KILOBYTE];
         try {
             ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
             ZipEntry zipEntry = zis.getNextEntry();

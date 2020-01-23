@@ -2,8 +2,11 @@ package com.desmond.fileutility.utils.impl;
 
 import com.desmond.fileutility.constants.FileConstants;
 import com.desmond.fileutility.constants.ValueConstants;
+import com.desmond.fileutility.service.impl.ZipServiceImpl;
 import com.desmond.fileutility.utils.FileUtilityInterface;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -14,6 +17,8 @@ import java.util.List;
 
 @Component
 public class FileUtility implements FileUtilityInterface {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(FileUtility.class);
 
     public FileUtility() {};
 
@@ -52,7 +57,7 @@ public class FileUtility implements FileUtilityInterface {
             FileInputStream fis = new FileInputStream(file.getAbsoluteFile());
             List<byte[]> listOfBytes = new ArrayList<>();
             float index = 0;
-            int len = Integer.MAX_VALUE - 5;
+            int len;
             int totalNumberOfBytesRead;
             double fileLen = file.length();
             while(index < fileLen) {
@@ -68,6 +73,8 @@ public class FileUtility implements FileUtilityInterface {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (OutOfMemoryError e) {
+            LOGGER.info("Increase JVM Heap size to at least 3GB");
         }
         return null;
     }
