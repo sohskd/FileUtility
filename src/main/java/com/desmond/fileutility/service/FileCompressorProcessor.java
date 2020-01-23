@@ -2,5 +2,5 @@ package com.desmond.fileutility.service;
 
 public interface FileCompressorProcessor {
 
-    public boolean startProcessing(String[] args);
+    boolean startProcessing(String[] args);
 }

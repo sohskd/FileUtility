@@ -140,9 +140,9 @@ public class ZipServiceImpl implements ZipService {
                 off += maxBytesPerFile;
             }
         } catch (FileNotFoundException ex) {
-            System.err.format("The file does not exist");
+            LOGGER.error("The file does not exist");
         } catch (IOException ex) {
-            System.err.println("I/O error: " + ex);
+            LOGGER.error("IOException");
         }
     }
 

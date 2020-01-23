@@ -11,7 +11,6 @@ public interface FileHelperService {
 
     void processOnFileOrFolder(List<File> listOfFiles);
 
-//    void decomOnFileOrFolder(List<File> listOfFiles);
     void decomOnFileOrFolder(List<File> listOfFiles, int index);
 
 }
