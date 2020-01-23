@@ -29,16 +29,12 @@ public class FileCompressorProcessorImpl implements FileCompressorProcessor {
     @Override
     public boolean startProcessing(String[] args) {
         LOGGER.info("> FileCompressorProcessorImpl startProcessing");
-
-        // Construct File class
         this.fileInProcess.setFileInput(args[0]);
         this.fileInProcess.setFileOutput(args[1]);
         this.fileInProcess.setMaximumCompressionSizePerFileInMB(Integer.parseInt(args[2]));
-
         List<File> listOfFiles = this.fileHelperService.getAvailableFoldersToProcess(this.fileInProcess);
-
         this.fileHelperService.processOnFileOrFolder(listOfFiles);
-
+        LOGGER.info("< FileCompressorProcessorImpl startProcessing");
         return true;
     }
 }

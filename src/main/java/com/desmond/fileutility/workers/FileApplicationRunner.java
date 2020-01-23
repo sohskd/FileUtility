@@ -36,9 +36,8 @@ public class FileApplicationRunner implements CommandLineRunner {
     }
 
     public static void main(String[] args, FileCompressorProcessor fileCompressorProcessor, FileDecompressorProcessor fileDecompressorProcessor, ValidateInputs validateInputs) {
-
         try {
-            switch (args.length) {
+            switch (validateInputs.getNumberOfArguments(args)) {
                 case ValueConstants.THREE:
                     validateInputs.validateCompressionInputs(args);
                     fileCompressorProcessor.startProcessing(args);
@@ -47,9 +46,6 @@ public class FileApplicationRunner implements CommandLineRunner {
                     validateInputs.validateDecompressionInputs(args);
                     fileDecompressorProcessor.startProcessing(args);
                     break;
-                default:
-                    throw new InvalidArgumentsException("The number of arguments is invalid");
-
             }
         } catch (FileNotFoundException | NumberFormatException | InvalidArgumentsException | OnlyPositiveNumberException e) {
             LOGGER.error(e.getMessage());

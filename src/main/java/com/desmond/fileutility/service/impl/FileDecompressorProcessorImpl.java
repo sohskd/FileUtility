@@ -28,12 +28,12 @@ public class FileDecompressorProcessorImpl implements FileDecompressorProcessor 
     @Override
     public boolean startProcessing(String[] args) {
         LOGGER.info("> FileDecompressorProcessorImpl startProcessing");
-        // Construct File class
         this.fileInProcess.setFileInput(args[0]);
         this.fileInProcess.setFileOutput(args[1]);
         List<File> listOfFiles = this.fileHelperService.getAvailableFoldersToProcess(this.fileInProcess);
         int index = 0;
         this.fileHelperService.decomOnFileOrFolder(listOfFiles, index);
+        LOGGER.info("< FileDecompressorProcessorImpl startProcessing");
         return true;
     }
 }

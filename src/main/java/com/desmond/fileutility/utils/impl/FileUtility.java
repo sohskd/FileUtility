@@ -31,7 +31,7 @@ public class FileUtility implements FileUtilityInterface {
     }
 
     @Override
-    public void deleteDir(File file) {
+    public boolean deleteDir(File file) {
         File[] contents = file.listFiles();
         if (contents != null) {
             for (File f : contents) {
@@ -41,6 +41,7 @@ public class FileUtility implements FileUtilityInterface {
             }
         }
         file.delete();
+        return true;
     }
 
     @Override
@@ -70,11 +71,13 @@ public class FileUtility implements FileUtilityInterface {
             fis.close();
             return listOfBytes;
         } catch (FileNotFoundException e) {
+            LOGGER.error("File is not found");
             e.printStackTrace();
         } catch (IOException e) {
+            LOGGER.error("IO Exception");
             e.printStackTrace();
         } catch (OutOfMemoryError e) {
-            LOGGER.info("Increase JVM Heap size to at least 3GB");
+            LOGGER.error("Increase JVM Heap size to at least 3GB");
         }
         return null;
     }

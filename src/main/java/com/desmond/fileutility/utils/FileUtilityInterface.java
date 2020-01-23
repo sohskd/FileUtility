@@ -8,7 +8,7 @@ public interface FileUtilityInterface {
 
     File createOrRetrieve(String directory);
 
-    void deleteDir(File file);
+    boolean deleteDir(File file);
 
     boolean checkIfFileDirectoryExist(String inputDirectory) throws FileNotFoundException;
 

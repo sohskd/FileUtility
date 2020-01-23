@@ -70,16 +70,6 @@ public class ZipServiceImpl implements ZipService {
         }
     }
 
-//    private File zipItWrapper(File file) {
-//        try {
-//            byte[] totalBytesOfFile = Files.readAllBytes(Paths.get(file.getAbsolutePath()));
-//            return zipIt(totalBytesOfFile);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
-//    }
-
     @Override
     public File zipFileInFolder(File file) {
         try {
@@ -128,9 +118,9 @@ public class ZipServiceImpl implements ZipService {
                 off += maxBytesPerFile;
             }
         } catch (FileNotFoundException ex) {
-            System.err.format("The file does not exist");
+            LOGGER.error("The file does not exist");
         } catch (IOException ex) {
-            System.err.println("I/O error: " + ex);
+            LOGGER.error("IOException");
         }
     }
 
