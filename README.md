@@ -1,6 +1,6 @@
 # A FileUtility for compression and decompression
 
-> This file utility has been tested on the following
+> This file utility has been tested on the following during development
 - txt
 - jar
 
@@ -50,3 +50,4 @@
 
 - There should only be zip files in the Test Output Directory before running decompression step
 - The Test Decompressed Directory (where the files will be decompressed to) should be empty before running decompression step
+- JVM Heap size should be 3GB and above to handle large files (eg 10 GB Files etc)

@@ -103,8 +103,8 @@ public class ZipServiceImpl implements ZipService {
 
     private void writeItToTheZipForBigFiles(byte[] totalBytesOfFile, File file, ZipOutputStream zos, int index) {
         try {
-            long maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
-            float off = 0;
+            double maxBytesPerFile = this.fileInProcess.getMaximumCompressionSizePerFileInMB() * ValueConstants.MEGABYTE;
+            double off = 0;
             int inside = 0;
             LOGGER.info("Processing file chunk: " + index);
             while (off < totalBytesOfFile.length) {

@@ -57,16 +57,20 @@ public class FileUtility implements FileUtilityInterface {
         try {
             FileInputStream fis = new FileInputStream(file.getAbsoluteFile());
             List<byte[]> listOfBytes = new ArrayList<>();
-            float index = 0;
-            int len;
+            double index = 0;
             int totalNumberOfBytesRead;
             double fileLen = file.length();
+            double size = Integer.MAX_VALUE - 5;
             while(index < fileLen) {
-                byte[] byteData = new byte[Integer.MAX_VALUE - 5];
-                len = getLenOfByteLeft();
-                totalNumberOfBytesRead = fis.read(byteData, 0, len);
+                byte[] byteData = new byte[(int) size];
+                totalNumberOfBytesRead = fis.read(byteData, 0, (int) size);
                 listOfBytes.add(byteData);
                 index += totalNumberOfBytesRead;
+                if (fileLen - totalNumberOfBytesRead > Integer.MAX_VALUE - 5) {
+                    size = Integer.MAX_VALUE - 5;
+                } else {
+                    size = fileLen - totalNumberOfBytesRead;
+                }
             }
             fis.close();
             return listOfBytes;
